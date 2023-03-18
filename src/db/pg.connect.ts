@@ -1,11 +1,14 @@
 import { Pool } from "pg";
+import dotenv from 'dotenv';
+
+dotenv.config({path:`.env.${process.env.NODE_ENV}`});
 
 const pool = new Pool({
-    host: '165.227.68.255',
-    database: 'frame',
-    port: 5438,
-    user: 'root',
-    password: 'root',
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    port: parseInt(process.env.DB_PORT!),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
     ssl: false
 });
 
