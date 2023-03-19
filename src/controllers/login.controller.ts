@@ -22,9 +22,10 @@ export const authenticateUser = async (req: Request, res:Response)=>{
                 token: ''
             });
         }
-    } catch (error) {
+    } catch (error:any ) {
         res.status(500).json({
-            error: error
+            error: error,
+            stack: error.stack
         })
     }
 };
