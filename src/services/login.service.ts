@@ -6,8 +6,8 @@ export const validateUser = async (user: string, password: string) => {
     const queryResult = rows[0];
 
     if (!queryResult.valid){
-        return {isValid: false, names: queryResult.no_usulog, userType: queryResult.no_perfil}
+        return {isValid: false, names: queryResult.no_usulog}
     }
 
-    return {isValid: true, names: queryResult.no_usulog }
+    return {isValid: true, names: queryResult.no_usulog, userType: queryResult.no_perfil}
 };
