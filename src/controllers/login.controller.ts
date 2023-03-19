@@ -20,7 +20,7 @@ export const authenticateUser = async (req: Request, res:Response)=>{
                 userName: autUser.names,
                 userType:  autUser.userType,
                 msg: "usuario autenticado correctamente",
-                token: ''
+                token: autUser.token
             });
         }
     } catch (error:any ) {
