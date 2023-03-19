@@ -1,6 +1,7 @@
 import express, { json } from 'express'
 import { authenticateUser } from './controllers/login.controller';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config({path:`.env.${process.env.NODE_ENV}`});
 console.log("process.env.DB_HOST", process.env.DB_HOST);
@@ -14,6 +15,7 @@ const port = process.env.PORT;
 const host = process.env.HOST;
 
 app.use(json());
+app.use(cors())
 app.post('/login', authenticateUser);
 
 app.listen(port, () => {
