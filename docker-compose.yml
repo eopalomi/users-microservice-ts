@@ -7,7 +7,7 @@ services:
     build: .
     image: users-ms
     ports:
-      - "5000:5151"
+      - "5050:5050"
     networks:
       - red-externa
 networks:
