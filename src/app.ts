@@ -10,12 +10,12 @@ console.log("process.env.DB_USER", process.env.DB_USER);
 console.log("process.env.DB_PASSWORD", process.env.DB_PASSWORD);
 const app = express();
 
-const port = process.env.PORT || '5555';
-const host = process.env.HOST || '0.0.0.0';
+const port = process.env.PORT;
+const host = process.env.HOST;
 
 app.use(json());
 app.post('/login', authenticateUser);
 
-app.listen({port: port, host: host}, () => {
+app.listen(port, () => {
     console.log("Servidor corriendo en el puerto " + port)
 });
