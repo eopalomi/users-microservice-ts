@@ -18,6 +18,7 @@ export const authenticateUser = async (req: Request, res:Response)=>{
                 valid: true,
                 user: user,
                 userName: autUser.names,
+                userType:  autUser.userType,
                 msg: "usuario autenticado correctamente",
                 token: ''
             });
