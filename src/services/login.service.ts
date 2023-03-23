@@ -3,7 +3,7 @@ import { generateToken } from './jwt.service';
 
 export const validateUser = async (user: string, password: string) => {
     const { rows } = await execQuery(`select * from usuari.auth_usuari('${JSON.stringify({user, password})}')`, null);
-    console.log(`select * from usuari.auth_usuari('${JSON.stringify({user, password})}')`);
+    
     const queryResult = rows[0];
 
     if (!queryResult.valid){

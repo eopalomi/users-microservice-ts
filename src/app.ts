@@ -2,22 +2,17 @@ import express, { json } from 'express'
 import { authenticateUser } from './controllers/login.controller';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import { routes } from './routes/index.routes';
 
-dotenv.config({path:`.env.${process.env.NODE_ENV}`});
-console.log("process.env.DB_HOST", process.env.DB_HOST);
-console.log("process.env.DB_NAME", process.env.DB_NAME);
-console.log("process.env.DB_PORT", process.env.DB_PORT);
-console.log("process.env.DB_USER", process.env.DB_USER);
-console.log("process.env.DB_PASSWORD", process.env.DB_PASSWORD);
 const app = express();
+dotenv.config({path:`.env.${process.env.NODE_ENV}`});
 
 const port = process.env.PORT;
-const host = process.env.HOST;
 
-app.use(json());
-app.use(cors())
-app.post('/login', authenticateUser);
+app.use(express.json());
+app.use(cors());
+app.use(routes);
 
 app.listen(port, () => {
-    console.log("Servidor corriendo en el puerto " + port)
+    console.log(`Servidor corriendo en el puerto ${port} en el ambiente de ${process.env.ENVIRONMENT}`);
 });
