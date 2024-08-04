@@ -5,7 +5,7 @@ import cors from 'cors';
 import { routes } from './routes/index.routes';
 
 const app = express();
-dotenv.config({path:`.env.${process.env.NODE_ENV}`});
+dotenv.config({path:`.env.${process.env.NODE_ENV}`}); // carga el env que le corresponda
 
 const port = process.env.PORT;
 
