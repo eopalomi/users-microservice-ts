@@ -1,0 +1,79 @@
+name: Deploy to DigitalOcean Droplet
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push Docker image
+      run: |
+        IMAGE_TAG=$GITHUB_SHA
+        if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+          IMAGE_TAG="latest"
+        elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+          IMAGE_TAG="develop"
+        fi
+        docker build -t your-dockerhub-username/your-app-name:$IMAGE_TAG .
+        docker push your-dockerhub-username/your-app-name:$IMAGE_TAG
+
+  deploy-develop:
+    if: github.ref == 'refs/heads/develop'
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: SSH and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: ${{ secrets.DROPLET_USER }}
+        key: ${{ secrets.DROPLET_SSH_KEY }}
+        script: |
+          docker pull your-dockerhub-username/your-app-name:develop
+          docker stop your-app-container || true
+          docker rm your-app-container || true
+          docker run -d --name your-app-container -p 80:3000 your-dockerhub-username/your-app-name:develop
+
+  deploy-main:
+    if: github.ref == 'refs/heads/main'
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Await approval before deploying to production
+      uses: hmarr/await-approval-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        environment: production
+        required-reviewers: |
+          your-github-username
+
+    - name: SSH and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: ${{ secrets.DROPLET_USER }}
+        key: ${{ secrets.DROPLET_SSH_KEY }}
+        script: |
+          docker pull your-dockerhub-username/your-app-name:latest
+          docker stop your-app-container || true
+          docker rm your-app-container || true
+          docker run -d --name your-app-container -p 80:3000 your-dockerhub-username/your-app-name:latest
