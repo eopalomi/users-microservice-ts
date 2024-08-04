@@ -57,7 +57,7 @@ jobs:
         key: ${{ secrets.DROPLET_SSH_KEY }}
         script: |
           # Navegar al directorio del proyecto
-          cd /path/to/your/project
+          cd ~/deploy-docker/netcor-services/users-microservice
 
           # Construir y levantar los contenedores usando Docker Compose
           docker-compose down || true
